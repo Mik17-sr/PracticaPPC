@@ -11,21 +11,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.parcial2ppc.domain.usecase.GetPokemonUseCase
+import com.example.practicappc.data.remote.RetrofitClient
+import com.example.practicappc.data.remote.repository.PokemonRepositoryImpl
+import com.example.practicappc.presentation.detail.PokemonScreen
+import com.example.practicappc.presentation.detail.PokemonViewModel
 import com.example.practicappc.ui.theme.PracticaPPCTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        val repository = PokemonRepositoryImpl(RetrofitClient.api)
+        val useCase = GetPokemonUseCase(repository)
+        val viewModel = PokemonViewModel(useCase)
+
         setContent {
-            PracticaPPCTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
+            PokemonScreen(viewModel = viewModel)
         }
     }
 }
